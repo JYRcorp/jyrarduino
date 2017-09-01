@@ -1,7 +1,7 @@
 # i2c_slave
 Sur "arduino pro mini" il y a 5 entrées analogiques A0..A4
 
-Le protocole I2C utilise 2 des entrées alalogiques : A3 et A4
+Le protocole I2C utilise 2 des entrées analogiques : A3 et A4
 
 On ne peut donc utiliser, au travers de I2C, que 3 entrées analogiques A0..A2
 
