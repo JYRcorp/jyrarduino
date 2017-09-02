@@ -1,6 +1,6 @@
 //
-// Lecture analogique de A0, A1, A2, A5
-// + renvoi des données en I2C (utilisant A3 et A4)
+// Lecture analogique de A0, A1, A2, A3
+// + renvoi des données en I2C (utilisant A4 et A5)
 //
 #include <Wire.h>
 // I2C address : choisir de 0x03 à 0x77 
@@ -23,8 +23,8 @@ void setup() {
     digitalWrite(A1, LOW );   // ensure pullup is off on button pin
     pinMode(A2, INPUT );      // ensure button pin is an input
     digitalWrite(A2, LOW );   // ensure pullup is off on button pin
-    pinMode(A5, INPUT );      // ensure button pin is an input
-    digitalWrite(A5, LOW );   // ensure pullup is off on button pin
+    pinMode(A3, INPUT );      // ensure button pin is an input
+    digitalWrite(A3, LOW );   // ensure pullup is off on button pin
     // I2C
     Wire.begin(SLAVE_ADDRESS); // join i2c bus (address optional for master)
     Wire.onReceive(receiveData); // register event
@@ -57,7 +57,7 @@ void loop() {
     data[4] = (byte) (tmpval >> 8);    // high order byte
     data[5] = (byte) (tmpval & 0xFF);  // low-order byte   
     
-    tmpval = analogRead(A5);
+    tmpval = analogRead(A3);
     data[6] = (byte) (tmpval >> 8);    // high order byte
     data[7] = (byte) (tmpval & 0xFF);  // low-order byte   
     
@@ -65,7 +65,7 @@ void loop() {
 }
 
 void receiveData(int byteCount){
-  // Reception de l'indice du PIN demandé (A0/byte1 =0; A0/byte2 =1...  A1 ... A2 ...  ya pas A3 ni A4 mais A5)
+  // Reception de l'indice du PIN demandé (A0/byte1 =0; A0/byte2 =1...  A1 ... A2 ...  A3)
     while(Wire.available()) {
       readData = Wire.read();
     }
