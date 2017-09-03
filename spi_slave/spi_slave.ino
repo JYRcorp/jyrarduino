@@ -1,52 +1,42 @@
-/*************************************************************
- SPI_Hello_Raspi
-   Configures an ATMEGA as an SPI slave and demonstrates
-   bidirectional communication with an Raspberry Pi SPI master
-   by repeatedly sending the text "Hello Raspi"
-****************************************************************/
+#include <SPI.h>
 
+char data[16];         // 8 lectures analogiques possibles dans 8 int = 16 bytes
+byte NBPINBYTES=16;  
+int temp;
 
-/***************************************************************
- Global Variables
-  -hello[] is an array to hold the data to be transmitted
-  -marker is used as a pointer in traversing data arrays
-/***************************************************************/
-
-unsigned char hello[] = {'H','e','l','l','o',' ',
-                         'R','a','s','p','i','\n'};
-byte marker = 0;
- 
-/***************************************************************  
- Setup SPI in slave mode (1) define MISO pin as output (2) set
- enable bit of the SPI configuration register 
-****************************************************************/ 
-                    
 void setup (void)
 {
+  Serial.begin (115200);   // debugging
+  // turn on SPI in slave mode
+  SPCR |= bit (SPE);
+  // have to send on master in, *slave out*
   pinMode(MISO, OUTPUT);
-  SPCR |= _BV(SPE);
-}  
+  
+  // init tableau
+  for(int i=0;i<NBPINBYTES;i++){
+    data[i]=0;
+  }      
 
-/***************************************************************  
- Loop until the SPI End of Transmission Flag (SPIF) is set
- indicating a byte has been received.  When a byte is
- received, load the next byte in the Hello[] array into SPDR
- to be transmitted to the Raspberry Pi, and increment the marker.
- If the end of the Hell0[] array has been reached, reset
- marker to 0.
-****************************************************************/
+  // now turn on SPI interrupt
+  SPI.attachInterrupt();
+}
 
+
+// SPI interrupt routine
+ISR (SPI_STC_vect)
+{
+  // grab byte from SPI Data Register
+  byte c = SPDR;  
+  
+  // renvoie +1 à la valeur
+  temp = (int) c;
+  temp++;
+  SPDR = (byte) temp;
+
+}
+
+// main loop - wait for flag set in interrupt routine
 void loop (void)
 {
-
-  if((SPSR & (1 << SPIF)) != 0)
-  {
-    SPDR = hello[marker];
-    marker++;
-    if(marker > sizeof(hello))
-    {
-      marker = 0;
-    }  
-  }
- 
-}
+    
+} 
