@@ -55,7 +55,7 @@ ISR (SPI_STC_vect)
 void loop (void)
 {
     // lectures des entrées analogiques A0 à A7 et mise en tableau des bytes
-    for (int pin=A0; pin<=A3; pin++){
+    for (int pin=A0; pin<=A7; pin++){
       tmpval = analogRead(pin);
       //sprintf(str, "A%d=%d - ", (pin-A0), tmpval); //debug
       //Serial.print(str); //debug
